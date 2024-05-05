@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Explorer and Video Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,7 +16,10 @@
         <div class="video-viewer">
             <h2>Video Viewer</h2>
             <video id="video-player" controls></video>
-            <button id="download-btn">Download Video</button>
+            <div class="controls">
+                <a id="download-btn" download><i class="fas fa-download"></i> Download</a>
+                <button id="share-btn"><i class="fas fa-share-alt"></i> Share</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
