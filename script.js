@@ -1,68 +1,82 @@
-// Replace this with the actual file paths and folder structure
-const fileStructure = {
-    'folder1': [
-        'path/to/folder1/video1.mp4',
-        'path/to/folder1/video2.mp4',
-    ],
-    'folder2': [
-        'path/to/folder2/video3.mp4',
-        'path/to/folder2/video4.mp4',
-    ],
-    // Add more folders and file paths as needed
-};
+// Folder Navigation
+const folderLinks = document.querySelectorAll('.folder-list a');
 
-const fileList = document.querySelector('.file-list');
-const videoPlayer = document.getElementById('video-player');
-const downloadBtn = document.getElementById('download-btn');
-const shareBtn = document.getElementById('share-btn');
+folderLinks.forEach(link => {
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
+    const folderUrl = event.target.href;
+    loadFolder(folderUrl);
+  });
+});
 
-// Function to render the file list based on the current folder
-function renderFileList(folder) {
-    fileList.innerHTML = '';
-    const folderFiles = fileStructure[folder] || [];
-
-    folderFiles.forEach(filePath => {
-        const listItem = document.createElement('li');
-        listItem.textContent = filePath.split('/').pop(); // Display only the filename
-        listItem.addEventListener('click', () => {
-            videoPlayer.src = filePath;
-            downloadBtn.href = filePath;
-        });
-        fileList.appendChild(listItem);
-    });
-
-    // Add folder navigation links
-    const folderNames = Object.keys(fileStructure);
-    folderNames.forEach(folderName => {
-        const listItem = document.createElement('li');
-        listItem.textContent = folderName;
-        listItem.addEventListener('click', () => {
-            renderFileList(folderName);
-        });
-        fileList.appendChild(listItem);
-    });
+function loadFolder(url) {
+  const request = new XMLHttpRequest();
+  request.open('GET', url);
+  request.onload = function() {
+    if (request.status === 200) {
+      const parser = new DOMParser();
+      const folderContent = parser.parseFromString(request.responseText, 'text/html');
+      const contentDiv = document.querySelector('.content');
+      contentDiv.innerHTML = folderContent.querySelector('.content').innerHTML;
+      initVideoPlayback();
+    } else {
+      console.error('Error loading folder:', request.status);
+    }
+  };
+  request.send();
 }
 
-// Initial render of the file list
-renderFileList('folder1');
+// Video Playback
+function initVideoPlayback() {
+  const videoElements = document.querySelectorAll('video');
 
-// Download video
-downloadBtn.addEventListener('click', () => {
-    if (videoPlayer.src) {
-        downloadBtn.href = videoPlayer.src;
-        downloadBtn.download = videoPlayer.src.split('/').pop(); // Set the downloaded filename
-    } else {
-        alert('No video selected to download');
-    }
+  videoElements.forEach(video => {
+    video.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+  });
+}
+
+// Share and Download Buttons
+const shareButtons = document.querySelectorAll('.share-btn');
+const downloadButtons = document.querySelectorAll('.download-btn');
+
+shareButtons.forEach(button => {
+  button.addEventListener('click', shareVideo);
 });
 
-// Share video
-shareBtn.addEventListener('click', () => {
-    if (videoPlayer.src) {
-        navigator.share({
-            url: videoPlayer.src,
-        });
-    } else {
-        alert('No video selected to share');
-    }
+downloadButtons.forEach(button => {
+  button.addEventListener('click', downloadVideo);
 });
+
+function shareVideo(event) {
+  const videoElement = event.target.closest('.video-item').querySelector('video');
+  const videoUrl = videoElement.src;
+  // Implement share functionality using Web Share API or custom share dialog
+  if (navigator.share) {
+    navigator.share({
+      url: videoUrl
+    });
+  } else {
+    // Fallback for browsers that don't support Web Share API
+    alert(`Share this video: ${videoUrl}`);
+  }
+}
+
+function downloadVideo(event) {
+  const videoElement = event.target.closest('.video-item').querySelector('video');
+  const videoUrl = videoElement.src;
+  const downloadLink = document.createElement('a');
+  downloadLink.href = videoUrl;
+  downloadLink.download = 'video.mp4'; // Set the desired filename
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+}
+
+// Initialize
+initVideoPlayback();

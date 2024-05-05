@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Explorer and Video Viewer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Viewer and File Explorer</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="file-explorer">
-            <h2>File Explorer</h2>
-            <ul class="file-list"></ul>
-        </div>
-        <div class="video-viewer">
-            <h2>Video Viewer</h2>
-            <video id="video-player" controls></video>
-            <div class="controls">
-                <a id="download-btn" download><i class="fas fa-download"></i> Download</a>
-                <button id="share-btn"><i class="fas fa-share-alt"></i> Share</button>
-            </div>
-        </div>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Folders</h2>
+      <ul class="folder-list">
+        <li><a href="folder1.html">Folder 1</a></li>
+        <li><a href="folder2.html">Folder 2</a></li>
+        <li><a href="folder3.html">Folder 3</a></li>
+      </ul>
     </div>
-    <script src="script.js"></script>
+    <div class="content">
+      <h1>Welcome to the Video Viewer</h1>
+      <p>Select a folder to view its videos.</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
